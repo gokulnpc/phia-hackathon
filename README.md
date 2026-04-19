@@ -22,6 +22,48 @@ One session across clients: **Supabase** for identity and data, **FastAPI** on R
 
 **Challenges in practice:** worn-image discovery is noisy (rights, duplicates, slow third-party search). We filter, cache, and fail soft. Reference photos and consent are strict by design.
 
+## Architecture
+
+Clients talk to **Supabase** (auth, Postgres, storage, realtime) with the anon key and JWT. They call **`mirror-api`** over HTTPS for orchestration (try-on submit, reverse search, fit score, closet saves, etc.). Slow work is written as rows in Postgres; **workers** poll or subscribe and call external APIs (try-on provider, Gemini, SerpAPI, Apify, etc.). Production web is commonly on **Vercel**; API and workers on **Railway** (same Docker image from `apps/backend`, different start commands).
+
+```mermaid
+flowchart TB
+  subgraph clients [Clients]
+    ext[Chrome extension]
+    web[Next.js web app]
+    sdk["@mirror/sdk-js"]
+  end
+  subgraph railway [Railway apps_backend]
+    api[mirror-api]
+    wTryon[mirror-tryon-worker]
+    wAvatar[mirror-avatar-worker]
+    wCloset[mirror-closet-enrichment-worker]
+    wFit[mirror-fit-score-worker]
+    wRev[mirror-reverse-search-worker]
+    wEdit[mirror-tryon-editorial-worker]
+    wVid[mirror-tryon-video-worker]
+  end
+  sb[(Supabase Postgres Auth Storage Realtime)]
+  ext --> sdk
+  web --> sdk
+  ext -->|JWT and REST| api
+  ext -->|session| sb
+  web -->|SSR and client| sb
+  web -->|REST| api
+  api -->|service role jobs reads| sb
+  wTryon --> sb
+  wAvatar --> sb
+  wCloset --> sb
+  wFit --> sb
+  wRev --> sb
+  wEdit --> sb
+  wVid --> sb
+```
+
+Worker entry points live in [`apps/backend/pyproject.toml`](apps/backend/pyproject.toml) under `[project.scripts]`. Railway **config-as-code** examples: [`apps/backend/railway.toml`](apps/backend/railway.toml) (API), [`railway.tryon-worker.toml`](apps/backend/railway.tryon-worker.toml), [`railway.avatar-worker.toml`](apps/backend/railway.avatar-worker.toml), [`railway.reverse-search-worker.toml`](apps/backend/railway.reverse-search-worker.toml), [`railway.tryon-editorial-worker.toml`](apps/backend/railway.tryon-editorial-worker.toml), [`railway.tryon-video-worker.toml`](apps/backend/railway.tryon-video-worker.toml). Fit-score and closet-enrichment workers use the same image; set start command in the dashboard to `mirror-fit-score-worker` / `mirror-closet-enrichment-worker` if you split them out.
+
+Full stack detail: [docs/02_Technical_Architecture.md](docs/02_Technical_Architecture.md).
+
 ## Repo layout
 
 | Path | Description |
