@@ -1,0 +1,11 @@
+# Deploy as a separate Railway service (same image as mirror-api).
+# Required env: DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+# GEMINI_API_KEY, and GEMINI_AVATAR_MODEL or GEMINI_TRYON_EDITORIAL_MODEL.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "mirror-tryon-editorial-worker"
+restartPolicyType = "ON_FAILURE"

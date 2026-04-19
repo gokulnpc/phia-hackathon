@@ -1,0 +1,13 @@
+diff --git a/dist/core/utils/log/printHeader.mjs b/dist/core/utils/log/printHeader.mjs
+index 0b6c44a97b8b1ace50ebefbb18426b730b75b835..77127866d33ac4d238d270be3346ffc0b0ede878 100644
+--- a/dist/core/utils/log/printHeader.mjs
++++ b/dist/core/utils/log/printHeader.mjs
+@@ -3,7 +3,7 @@ import { consola as consola$1 } from "consola";
+ import { styleText } from "node:util";
+ //#region src/core/utils/log/printHeader.ts
+ function printHeader() {
+-	consola$1.log(`\n${styleText("gray", "WXT")} ${styleText(["bold", "grey"], version)}`);
++	consola$1.log(`\n${styleText("gray", "WXT")} ${styleText(["bold", "gray"], version)}`);
+ }
+ //#endregion
+ export { printHeader };

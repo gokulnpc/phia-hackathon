@@ -1,0 +1,101 @@
+[project]
+name = "mirror-backend"
+version = "0.1.0"
+description = "Mirror FastAPI API and workers"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi[standard]>=0.115.6",
+  "uvicorn[standard]>=0.32.1",
+  "pydantic>=2.10.3",
+  "pydantic-settings>=2.6.1",
+  "structlog>=24.4.0",
+  "certifi>=2024.8.30",
+  "httpx>=0.28.1",
+  "PyJWT[crypto]>=2.10.1",
+  "asyncpg>=0.30.0",
+  "python-multipart>=0.0.17",
+  "supabase>=2.11.0",
+  "google-genai>=1.73.1",
+  "pillow>=12.2.0",
+  "selectolax>=0.3.21",
+  "imagehash>=4.3.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.4",
+  "pytest-asyncio>=0.25.0",
+  "ruff>=0.8.4",
+  "mypy>=1.13.0",
+]
+
+[project.scripts]
+mirror-api = "mirror.main:run_api"
+mirror-tryon-worker = "mirror.workers.tryon_worker:run_worker"
+mirror-avatar-worker = "mirror.workers.avatar_worker:run_worker"
+mirror-closet-enrichment-worker = "mirror.workers.closet_enrichment_worker:run_worker"
+mirror-fit-score-worker = "mirror.workers.fit_score_worker:run_worker"
+mirror-reverse-search-worker = "mirror.workers.reverse_search_worker:run_worker"
+mirror-tryon-editorial-worker = "mirror.workers.tryon_editorial_worker:run_worker"
+mirror-tryon-video-worker = "mirror.workers.tryon_video_worker:run_worker"
+
+[build-system]
+requires = ["setuptools>=70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["asyncpg", "asyncpg.*"]
+ignore_missing_imports = true
+
+# Supabase Python client responses are untyped JSON; narrow at runtime in a follow-up pass.
+[[tool.mypy.overrides]]
+module = [
+  "mirror.api.routers.avatar",
+  "mirror.api.routers.catalog",
+  "mirror.api.routers.closet",
+  "mirror.api.routers.fit_score",
+  "mirror.api.routers.reverse_search",
+  "mirror.api.routers.tryon",
+  "mirror.core.closet.enrichment",
+  "mirror.core.fit_score.closet_snapshot",
+  "mirror.core.fit_score.service",
+  "mirror.core.product_catalog",
+  "mirror.core.visual_search.service",
+  "mirror.core.tryon_logic",
+  "mirror.workers.closet_enrichment_worker",
+  "mirror.workers.fit_score_worker",
+  "mirror.workers.reverse_search_worker",
+  "mirror.workers.tryon_worker",
+  "mirror.workers.tryon_editorial_worker",
+  "mirror.workers.tryon_video_worker",
+  "mirror.workers.avatar_worker",
+  "mirror.integrations.fashn_direct_tryon",
+  "mirror.core.tryon_preprocess",
+  "mirror.integrations.gemini_avatar",
+  "mirror.integrations.gemini_closet_attributes",
+  "mirror.integrations.gemini_fit_score",
+  "mirror.integrations.gemini_person_filter",
+]
+ignore_errors = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]

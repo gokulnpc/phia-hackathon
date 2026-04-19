@@ -1,0 +1,13 @@
+{
+  "name": "mirror",
+  "private": true,
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "dev:web": "pnpm --filter @mirror/web dev",
+    "dev:extension": "pnpm --filter @mirror/extension-wxt dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test:backend": "uv run --project apps/backend pytest -q"
+  }
+}

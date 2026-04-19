@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* phia_mobile design tokens */
+    --bg: #F5F2ED;          /* warm paper — panel background */
+    --bg-2: #EDE8E0;        /* secondary surface, avatar chips */
+    --card: #FFFFFF;        /* elevated cards, inputs */
+    --ink: #121212;         /* primary text, primary buttons */
+    --ink-2: #3B3A36;       /* secondary text, icons */
+    --ink-3: #8A857D;       /* muted text, placeholders */
+    --hair: #E3DDD2;        /* hairline borders */
+    --accent: #8A7CE0;      /* dusty lavender — generation / liveness / transformation only */
+    --accent-soft: #E7E2F7; /* accent backgrounds */
+    --danger: #C2564A;      /* heart reactions */
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family:
+      Inter,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}

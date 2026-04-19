@@ -1,0 +1,11 @@
+# Deploy as a separate Railway service: Settings → Root directory → apps/backend,
+# Settings → Config as code → path `/apps/backend/railway.tryon-worker.toml`.
+# Uses the same Docker image as mirror-api with a worker start command only.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "mirror-tryon-worker"
+restartPolicyType = "ON_FAILURE"

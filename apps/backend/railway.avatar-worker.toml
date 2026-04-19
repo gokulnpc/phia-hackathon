@@ -1,0 +1,11 @@
+# Deploy as a separate Railway service: Settings → Root directory → apps/backend,
+# Settings → Config as code → path `/apps/backend/railway.avatar-worker.toml`.
+# GEMINI_API_KEY + GEMINI_AVATAR_MODEL required on this service (see docs/06 §3.3).
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "mirror-avatar-worker"
+restartPolicyType = "ON_FAILURE"

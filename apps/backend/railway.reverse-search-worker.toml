@@ -1,0 +1,13 @@
+# Deploy as a separate Railway service: Settings → Root directory → apps/backend,
+# Settings → Config as code → path `/apps/backend/railway.reverse-search-worker.toml`.
+# Uses the same Docker image as mirror-api with a worker start command only.
+# Required env vars on this service: DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+# VISUAL_SEARCH_PROVIDER (+ SERPAPI_API_KEY if VISUAL_SEARCH_PROVIDER=serpapi).
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "mirror-reverse-search-worker"
+restartPolicyType = "ON_FAILURE"
