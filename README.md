@@ -2,11 +2,11 @@
 
 Social virtual try-on for real shopping: a **Chrome extension** (side panel) and a small **Next.js** web companion, plus **FastAPI** on Railway and **Supabase** (Postgres, Auth, Storage, Realtime).
 
-## Why this exists
+## Features
 
 Most people do not buy a jacket because the packshot is perfect. They buy because they saw it on someone. Influencers and celebrities normalize a cut or a brand. Screenshots and “where did she get that” threads are the funnel; storefronts still behave like catalogs. Mirror puts **two proofs** next to each other on the product page: **real people wearing the item or something like it** (our **Worn by** strip from Mirror posts and the wider web), and **virtual try-on on your body** from reference photos you approve in the web app first. Add **fit score** against what you already own, optional **editorial** stills you can share, and **Feed** / **Circle** so people you trust can react before you pay.
 
-## What we ship in this repo
+## Components
 
 | Surface | Role |
 |--------|------|
@@ -14,7 +14,7 @@ Most people do not buy a jacket because the packshot is perfect. They buy becaus
 | Web app | Sign-in, biometric consent, reference uploads, closet, feed, settings |
 | Backend | FastAPI API plus workers for try-on, reverse search, fit score, editorial, video, etc. |
 
-## Architecture
+## Technical Architecture
 
 Clients talk to **Supabase** (auth, Postgres, storage, realtime) with the anon key and JWT. They call **`mirror-api`** over HTTPS for orchestration (try-on submit, reverse search, fit score, closet saves, etc.). Slow work is written as rows in Postgres; **workers** poll or subscribe and call external APIs (try-on provider, Gemini, SerpAPI, Apify, etc.). Production web is commonly on **Vercel**; API and workers on **Railway** (same Docker image from `apps/backend`, different start commands).
 
@@ -84,7 +84,7 @@ Side panel on a retailer PDP (development build).
 
 ![Mirror extension: Circle tab](assets/img4.jpeg)
 
-## Repo layout
+## Repository structure
 
 | Path | Description |
 |------|-------------|
